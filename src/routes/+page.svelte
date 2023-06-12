@@ -1,5 +1,6 @@
 <script lang="ts">
     import axios from "axios";
+    import Matrix from "../Matrix.svelte";
     let used_words: string[] = [];
 
     let attempts: number = 0;
@@ -10,6 +11,8 @@
 
     const getWord = async () => {
         attempts = 5;
+        used_words = []
+        some_word = ""
         const data = await axios.get(
             "https://random-word-api.vercel.app/api?words=1&length=" +
                 guess_word_len
@@ -19,11 +22,9 @@
     };
 
     const checkWord = () => {
-        if (attempts == 0) {
-            attempts = "No attempts, try another word";
-        }
         used_words.push(some_word);
-        console.log(used_words);
+        used_words = used_words
+
         attempts -= 1;
 
         switch (some_word) {
@@ -41,7 +42,10 @@
     };
 </script>
 
-<div style="padding-left: 1.5rem;">
+<div style="
+padding-left: 1.5rem;
+padding-top:1.5rem;
+">
     <h1>Welcome to SvelteWordle</h1>
     <p><strong>Guess the word of the day!</strong></p>
     {#if attempts == 0}
@@ -51,19 +55,26 @@
     {#if attempts > 0}
         <span>Remaining attempts: {attempts}</span>
     {/if}
-    <div>
+    <div style="
+    align-items: center;
+    padding-top:1.5rem"> 
         <span>Length: {guess_word_len}</span>
         <input type="range" min="3" max="8" bind:value={guess_word_len} />
     </div>
-    <div>
+
+    <div style="padding-top: 1.5rem;">
         <input
-            style="max-width: 15%;"
+            style="
+            max-width: 15%;"
             class="form-control"
             type="text"
             bind:value={some_word}
             maxlength={guess_word_len}
         />
     </div>
+
+    <div>
+
     <div style="padding-top: 1.5rem;">
         <button class="btn btn-primary" on:click={checkWord}>Check</button>
     </div>
@@ -72,10 +83,9 @@
         <button class="btn btn-primary" on:click={getWord}>Get Word</button>
     </div>
 
+    </div>
+
     <div style="padding-top: 1.5rem;">
-        <h4>Used words</h4>
-        {#each used_words as word}
-            <p>{word}</p>
-        {/each}
+        <Matrix {used_words}{guess_word}/>
     </div>
 </div>
