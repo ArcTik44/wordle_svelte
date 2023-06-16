@@ -12,7 +12,7 @@
     const getWord = async () => {
         attempts = 5;
         used_words = []
-        some_word = ""
+        some_word = "".toLocaleLowerCase()
         const data = await axios.get(
             "https://random-word-api.vercel.app/api?words=1&length=" +
                 guess_word_len
@@ -22,7 +22,7 @@
     };
 
     const checkWord = () => {
-        used_words.push(some_word);
+        used_words.push(some_word.toLocaleLowerCase());
         used_words = used_words
 
         attempts -= 1;
@@ -48,13 +48,14 @@ padding-top:1.5rem;
 ">
     <h1>Welcome to SvelteWordle</h1>
     <p><strong>Guess the word of the day!</strong></p>
-    {#if attempts == 0}
-        <span>No more attempts</span>
-    {/if}
 
     {#if attempts > 0}
         <span>Remaining attempts: {attempts}</span>
+    {:else}
+        <span>No more attempts</span>
     {/if}
+
+    
     <div style="
     align-items: center;
     padding-top:1.5rem"> 
@@ -65,7 +66,8 @@ padding-top:1.5rem;
     <div style="padding-top: 1.5rem;">
         <input
             style="
-            max-width: 15%;"
+            max-width: 15%;
+            text-transform:lowercase;"
             class="form-control"
             type="text"
             bind:value={some_word}
@@ -74,10 +76,18 @@ padding-top:1.5rem;
     </div>
 
     <div>
-
+    
+    {#if attempts > 0}
     <div style="padding-top: 1.5rem;">
         <button class="btn btn-primary" on:click={checkWord}>Check</button>
     </div>
+    
+    {:else}
+    <div style="padding-top: 1.5rem;">
+        <button disabled class="btn btn-primary" on:click={checkWord}>Check</button>
+    </div>
+    {/if}
+    
 
     <div style="padding-top: 1.5rem;">
         <button class="btn btn-primary" on:click={getWord}>Get Word</button>

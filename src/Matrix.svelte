@@ -16,13 +16,6 @@
         else return false
     }
 
-    const badChar = (ch:string):boolean =>{
-        if ([...guess_word].includes(ch)!=true){
-            return true
-        }
-        else return false
-    }
-
 </script>
 
 <div style="display: flex; flex-direction:column">
@@ -31,13 +24,11 @@
             {#each [...word] as ch,i }
                 {#if positionOk(ch,i)}
                 <div class="position_ok">{ch}</div>
-                {/if}
-
-                {#if positionBad(ch,i)}
-                <div class="position_bad">{ch}</div>
-                {/if}
                 
-                {#if badChar(ch)}
+                {:else if positionBad(ch,i)}
+                <div class="position_bad">{ch}</div>
+
+                {:else}
                 <div class="bad_char">{ch}</div>
                 {/if}
 
